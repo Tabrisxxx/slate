@@ -1,15 +1,12 @@
 ---
-title: API Reference
+title: Seneki API Reference
 
 language_tabs: # must be one of https://github.com/rouge-ruby/rouge/wiki/List-of-supported-languages-and-lexers
   - shell
-  - ruby
-  - python
-  - javascript
+  - http
 
 toc_footers:
   - <a href='#'>Sign Up for a Developer Key</a>
-  - <a href='https://github.com/slatedocs/slate'>Documentation Powered by Slate</a>
 
 includes:
   - errors
@@ -20,226 +17,182 @@ code_clipboard: true
 
 meta:
   - name: description
-    content: Documentation for the Kittn API
+    content: Documentation for the Seneki API
 ---
 
-# Introduction
+# Seneki Calories API
 
-Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.
-
-We have language bindings in Shell, Ruby, Python, and JavaScript! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
-
-This example API documentation page was created with [Slate](https://github.com/slatedocs/slate). Feel free to edit it and use it as a base for your own API's documentation.
+Seneki Calories API provides instant food recognition and calorie estimation through computer vision, Optical Character Recognition (OCR), and Large Language Models (LLMs) to deliver comprehensive food analysis. Our API processes food images to identify items, extract nutritional information, and calculate calories with industry-leading accuracy.
 
 # Authentication
 
 > To authorize, use this code:
 
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-```
-
 ```shell
 # With shell, you can just pass the correct header with each request
-curl "api_endpoint_here" \
-  -H "Authorization: meowmeowmeow"
+curl -X POST "https://seneki-api.com/calories-pic" \
+  -H "Ocp-Subscription-Key: <API Subscription key>" \
 ```
 
-```javascript
-const kittn = require('kittn');
 
-let api = kittn.authorize('meowmeowmeow');
+```http
+POST https://seneki-api.com/calories-pic HTTP/1.1
+Ocp-Subscription-Key: <API Subscription key>
 ```
 
-> Make sure to replace `meowmeowmeow` with your API key.
+> Make sure to replace `<API Subscription key>` with your API key.
 
-Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our [developer portal](http://example.com/developers).
+Seneki Calories API uses Ocp Subscription keys to allow access to the API. You can register by contact us.
 
 Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:
 
-`Authorization: meowmeowmeow`
+`Ocp-Subscription-Key: <API Subscription key>`
 
 <aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
+You must replace <code>API Subscription key</code> with your personal API key.
 </aside>
 
-# Kittens
+# Image-Based Calories Estimation API
 
-## Get All Kittens
+You can submit images for generation requests using either of these methods:
 
-```ruby
-require 'kittn'
+ `Image URL`: Provide a full web address to an image file
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get
-```
+`(Example: https://example.com/image.png)`
 
-```python
-import kittn
+ `Base64 Data URL`: Encode the image as a Base64 string
 
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get()
-```
+`(Format: data:image/png;base64,...)`
 
-```shell
-curl "http://example.com/api/kittens" \
-  -H "Authorization: meowmeowmeow"
-```
+## Image Input Requirements
 
-```javascript
-const kittn = require('kittn');
+Input images must meet the following requirements to be used in the Calories API.
 
-let api = kittn.authorize('meowmeowmeow');
-let kittens = api.kittens.get();
-```
+### Supported file types	
+`PNG (.png) `
 
-> The above command returns JSON structured like this:
+`JPEG (.jpeg and .jpg)`
 
-```json
-[
-  {
-    "id": 1,
-    "name": "Fluffums",
-    "breed": "calico",
-    "fluffiness": 6,
-    "cuteness": 7
-  },
-  {
-    "id": 2,
-    "name": "Max",
-    "breed": "unknown",
-    "fluffiness": 5,
-    "cuteness": 10
-  }
-]
-```
+`WEBP (.webp)`
 
-This endpoint retrieves all kittens.
+### Size limits	
+Up to 5 MB total payload size per request.
 
-### HTTP Request
+Maximum image size: 1024×1024 pixels.
 
-`GET http://example.com/api/kittens`
+### Other requirements	
+Picture need to be clear enough for a human to understand.
 
-### Query Parameters
+## Image URL
 
-Parameter | Default | Description
---------- | ------- | -----------
-include_cats | false | If set to true, the result will also include cats.
-available | true | If set to false, the result will include kittens that have already been adopted.
-
-<aside class="success">
-Remember — a happy kitten is an authenticated kitten!
-</aside>
-
-## Get a Specific Kitten
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get(2)
-```
 
 ```shell
-curl "http://example.com/api/kittens/2" \
-  -H "Authorization: meowmeowmeow"
+curl -X POST "https://seneki-api.com/calories-pic" \
+  -H "Ocp-Subscription-Key: <API Subscription key>" \
+  -d '{
+    "image_url": "https://example.com/food.jpg"
+  }'
 ```
 
-```javascript
-const kittn = require('kittn');
+```http
+POST https://seneki-api.com/calories-pic HTTP/1.1
+Ocp-Subscription-Key: <API Subscription key>
 
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.get(2);
+{"image_url":"https://example.com/food.jpg"}
 ```
 
 > The above command returns JSON structured like this:
 
 ```json
 {
-  "id": 2,
-  "name": "Max",
-  "breed": "unknown",
-  "fluffiness": 5,
-  "cuteness": 10
+  "result": "Your ·Cheeseburger· has approximately ·300· calories for ·1· serving.",
+  "confidence": 0.9
+}
+```
+
+Use Image URL in Seneki Calories API to estimate food calories.
+
+### HTTP Request
+
+`POST https://seneki-api.com/calories-pic`
+
+### Request Header
+
+Name | Required | Description
+--------- | ------- | -----------
+Ocp-Subscription-Key | true | API key which offers by Seneki
+
+### Request Body
+
+Name | Required | Description
+--------- | ------- | -----------
+image_url | true | A web address which could be accessed on Pulic Internet.
+
+<aside class="success">
+Remember — Must include API key for authentication.
+</aside>
+
+### Response Body
+
+Name | Default | Description
+--------- | ------- | -----------
+Result | true | The estimated calorie analysis formatted for end-user display. Format:"Your ·[FOOD_ITEM]· has approximately ·[CALORIES]· calories for ·[SERVING_SIZE]· serving."
+confidence | true | The system's confidence in the calorie estimation accuracy, represented as a probability value between 0.0 (lowest) and 1.0 (highest). Seneki API would only return result with confidence larger than 0.6.
+
+## Base64 Image
+
+```shell
+curl -X POST "https://seneki-api.com/calories-pic" \
+  -H "Ocp-Subscription-Key: <API Subscription key>" \
+  -d '{
+    "image_url": "data:image/png;base64,..."
+  }'
+```
+
+```http
+POST https://seneki-api.com/calories-pic HTTP/1.1
+Ocp-Subscription-Key: <API Subscription key>
+
+{"image_url": "data:image/png;base64,..."}
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+  "result": "Your ·Cheeseburger· has approximately ·300· calories for ·1· serving.",
+  "confidence": 0.9
 }
 ```
 
 This endpoint retrieves a specific kitten.
 
-<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
+<aside class="warning">Because of the large amount of characters in the base64 image, it may cause the payload to exceed the size it can carry. We recommend using the <code>&lt;Image URL&gt;</code>.</aside>
+
+Use Base64 format in Seneki Calories API to estimate food calories.
 
 ### HTTP Request
 
-`GET http://example.com/kittens/<ID>`
+`POST https://seneki-api.com/calories-pic`
 
-### URL Parameters
+### Request Header
 
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to retrieve
+Name | Required | Description
+--------- | ------- | -----------
+Ocp-Subscription-Key | true | API key which offers by Seneki
 
-## Delete a Specific Kitten
+### Request Body
 
-```ruby
-require 'kittn'
+Name | Required | Description
+--------- | ------- | -----------
+image_url | true | A Base64 format image.
 
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.delete(2)
-```
+### Response Body
 
-```python
-import kittn
+Name | Default | Description
+--------- | ------- | -----------
+Result | true | The estimated calorie analysis formatted for end-user display. Format:"Your ·[FOOD_ITEM]· has approximately ·[CALORIES]· calories for ·[SERVING_SIZE]· serving."
+confidence | true | The system's confidence in the calorie estimation accuracy, represented as a probability value between 0.0 (lowest) and 1.0 (highest). Seneki API would only return result with confidence larger than 0.6.
 
-api = kittn.authorize('meowmeowmeow')
-api.kittens.delete(2)
-```
 
-```shell
-curl "http://example.com/api/kittens/2" \
-  -X DELETE \
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.delete(2);
-```
-
-> The above command returns JSON structured like this:
-
-```json
-{
-  "id": 2,
-  "deleted" : ":("
-}
-```
-
-This endpoint deletes a specific kitten.
-
-### HTTP Request
-
-`DELETE http://example.com/kittens/<ID>`
-
-### URL Parameters
-
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to delete
 
